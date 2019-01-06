@@ -1,0 +1,33 @@
+# 以下代码中需要替换的地方共有5处
+# 'school.xls' —— 读取文件名称
+# '百度地图AK' —— API账号中的AK，需创建应用打开地理编码功能
+# '学校' —— 用来获得坐标的地址，对应EXCEL文件中的字段名称
+# '纬度' '经度' —— 用来存储坐标的 EXCEL文件中的字段名
+
+import pandas as pd
+data = pd.read_excel('school.xls') # 读取文件的名称
+
+import json
+from urllib.request import urlopen, quote
+import requests
+def getlnglat(address):
+    url = 'http://api.map.baidu.com/geocoder/v2/'
+    output = 'json'
+    ak = '百度地图AK' # 百度地图ak，具体申请自行百度，提醒需要在“控制台”-“设置”-“启动服务”-“正逆地理编码”，启动
+    address = quote(address) # 由于本文地址变量为中文，为防止乱码，先用quote进行编码
+    uri = url + '?' + 'address=' + address  + '&output=' + output + '&ak=' + ak 
+    req = urlopen(uri)
+    res = req.read().decode() 
+    temp = json.loads(res)
+    lat = temp['result']['location']['lat']
+    lng = temp['result']['location']['lng']
+    return lat,lng   # 纬度 latitude   ，   经度 longitude  ，
+
+for indexs in data.index:
+    get_location = getlnglat(data.loc[indexs,'学校'])  # 存放地址的字段名
+    get_lat = get_location[0]
+    get_lng = get_location[1]
+    data.loc[indexs,'纬度'] = get_lat  #储存纬度的字段名
+    data.loc[indexs,'经度'] = get_lng  #储存经度的字段名
+
+data.to_csv('output.csv')
