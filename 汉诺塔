@@ -1,0 +1,13 @@
+# 定义汉诺塔的递归函数,x,y,z为三个容器，n为汉诺塔的层数 
+# 可将每一次移动分为三步，向下递归
+def hanoe(n,x,y,z):        # 将 n 个盘子 从 x 移动到 z
+    if n==1 :
+        print(x,'-->',z)   # 只有一个盘子，直接从 x 移动到 z
+    else:
+        hanoe(n-1,x,z,y)   # 将前 n-1 个盘子，借助 y ,从 x 移动到 z
+        print(x,'-->',z)   # 将第 n 个盘子 从 x 移动到 z
+        hanoe(n-1,y,x,z)   # 将前 n-1 个盘子，借助 x ,从 y 移动到 z
+
+n = int(input('请输入汉诺塔的层数:'))
+print('移动步骤如下：')
+hanoe(n,'x','y','z')
