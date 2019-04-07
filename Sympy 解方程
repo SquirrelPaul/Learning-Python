@@ -1,0 +1,6 @@
+import sympy as sy
+a = 0.0097
+b = -0.9583
+c =26.741           #多项式方程的系数a,b,c
+x = sy.symbols('x') 
+sy.solve(a*(x**3)+b(x**2)+c*x-229.1 , x)     #求解ax3+bx2+c-229.1=0方程
