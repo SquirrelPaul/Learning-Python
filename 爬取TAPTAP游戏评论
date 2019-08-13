@@ -15,7 +15,7 @@ Created on Sun Jul 28 15:48:56 2019
 ##【游戏编号】TAPTAP对应的游戏编号，例如山海镜花是137744
 ##【排列顺序】TAPTAP评论排序，有update/hot/spent三种属性，分别对应 按时间排序/按热度排序/按游戏时长排序
 ##【爬取页数】一共需要获取多少页评论，一页有20个评论
- ##【保存地址】存在哪里，以xlsx结尾
+ ##【保存地址】存在哪里，以csv结尾
 ###-------------
 from bs4 import BeautifulSoup
 import requests
@@ -26,7 +26,7 @@ import pandas as pd
 GameNumber = 137744      ##【游戏编号】
 CommentPage = 3     ##【爬取页数】
 CommentOrder = 'update'  ##【排列顺序】update/hot/spent
-SaveAddress = 'E:/SHJH_gamecomments1.xlsx'  ##【保存地址】以xlsx结尾
+SaveAddress = 'E:/137744.csv'  ##【保存地址】以csv结尾
 
 def getHtmlText(url):
     try:
@@ -38,7 +38,7 @@ def getHtmlText(url):
         print("Error")
 
 def parText(result,text):
-    name_search = text.find("span", class_='taptap-user').get_text()
+    name_search = text.find("span", class_='taptap-user').get_text().strip()
     score = int(int(text.find("div", class_='item-text-score').find("i", class_='colored').get("style")[-4:-2])//14)
     comment = text.find("div", class_='item-text-body').get_text().strip()
     
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             print("\r进度:{:2f}%".format(count*100/CommentPage),end="")
             print()
             print(str(e))
-pd.DataFrame(result1, columns=['用户名','评论时间', '评分值', '评论']).to_excel(SaveAddress, index=None, encoding='utf-8')  # 【指定字段写入的规则】以sep的属性作为分隔符，将文件写入txt文件中
+pd.DataFrame(result1, columns=['用户名','评论时间', '评分值', '评论']).to_csv(SaveAddress, index=None, encoding='utf-8')  # 【指定字段写入的规则】以sep的属性作为分隔符，将文件写入txt文件中
 
 
 ###---------------
